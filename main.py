@@ -4,6 +4,9 @@ from difflib import get_close_matches
 # Loads in the definitions file as a dict
 data = json.load(open("data.json","r"))
 
+# Housekeeping to make program run until user chooses to exit
+loop = True
+
 def print_definition(user_word):
 
     # This function loops through all possible definitions of the word and prints them    
@@ -51,11 +54,21 @@ def check_user_word(user_word):
         else:
 
             no_match(user_word)
-    
-# Grabs the word to be looked up
-user_word = input("\nPlease enter a word to be defined:\n")
 
-check_user_word(user_word)
+while loop:
+
+    # Grabs the word to be looked up
+    user_word = input("\nPlease enter a word to be defined:\n")
+
+    check_user_word(user_word)
+
+    # Determines whether to loop to search for another word
+    go_again = input("\nWould you like to look up another word?  Y/N: ")
+
+    # Ends program
+    if go_again.lower() == "n":
+
+        loop = False
 
 # Personal terminal cleanliness preference
 print("")
