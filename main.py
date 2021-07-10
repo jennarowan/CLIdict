@@ -45,6 +45,11 @@ def check_user_word(user_word):
             check_user_word(user_word.title())
             return
 
+        elif user_word.upper() in data:
+
+            check_user_word(user_word.upper())
+            return
+
         # Checks to see if a close match exists, in case of fat fingers
         possibleWord = get_close_matches(user_word, data, 1)
 
