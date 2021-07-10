@@ -77,7 +77,7 @@ while loop:
     go_again = input("\nWould you like to look up another word?  Y/N: ")
 
     # Ends program
-    if go_again.lower() == "n":
+    if go_again.lower() != "y":
 
         loop = False
 
