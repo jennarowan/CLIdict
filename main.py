@@ -51,17 +51,17 @@ def check_user_word(user_word):
             return
 
         # Checks to see if a close match exists, in case of fat fingers
-        possibleWord = get_close_matches(user_word, data, 1)
+        possible_word = get_close_matches(user_word, data, 1)
 
-        if possibleWord:
+        if possible_word:
 
             # If close match exists, did the user mean that word?
-            grabMatch = input(f"Did you possibly mean to type {possibleWord[0]}?  Y/N: ")
+            grabMatch = input(f"Did you possibly mean to type {possible_word[0]}?  Y/N: ")
 
             if grabMatch.lower() == "y":
 
                 # If the user meant to type that word we start again with that word instead
-                check_user_word(possibleWord[0])
+                check_user_word(possible_word[0])
 
             else:
 
