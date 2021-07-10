@@ -1,8 +1,19 @@
-import json
-from difflib import get_close_matches
+# THIS VERSION OF THE FILE SWAPS OUT THE LOCAL JSON FILE
+# AND RELATED HANDLING IN FAVOR OF A REMOTE DATABASE ACCESSED
+# USING MySQL
 
-# Loads in the definitions file as a dict
-data = json.load(open("data.json","r"))
+import mysql.connector
+
+# Database and credentials provided by teacher who made the
+# tutorial I used for this program
+con = mysql.connector.connect(
+    user = "ardit700_student",
+    password = "ardit700_student",
+    host = "108.167.140.122",
+    database = "ardit700_pm1database"
+    )
+
+cursor = con.cursor()
 
 # Housekeeping to make program run until user chooses to exit
 loop = True
@@ -33,22 +44,6 @@ def check_user_word(user_word):
         print_definition(user_word)
 
     except KeyError:
-
-        # Checks to see if capitilization is the problem, recurses with the corrected word if so
-        if user_word.lower() in data:
-
-            check_user_word(user_word.lower())
-            return
-
-        elif user_word.title() in data:
-
-            check_user_word(user_word.title())
-            return
-
-        elif user_word.upper() in data:
-
-            check_user_word(user_word.upper())
-            return
 
         # Checks to see if a close match exists, in case of fat fingers
         possibleWord = get_close_matches(user_word, data, 1)
