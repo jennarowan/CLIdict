@@ -35,10 +35,14 @@ def check_user_word(user_word):
     except KeyError:
 
         # Checks to see if capitilization is the problem, recurses with the corrected word if so
-        # (I don't just use lower() to begin with to handle proper nouns.....properly)
         if user_word.lower() in data:
 
             check_user_word(user_word.lower())
+            return
+
+        elif user_word.title() in data:
+
+            check_user_word(user_word.title())
             return
 
         # Checks to see if a close match exists, in case of fat fingers
