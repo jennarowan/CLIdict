@@ -18,51 +18,57 @@ cursor = con.cursor()
 # Housekeeping to make program run until user chooses to exit
 loop = True
 
-def print_definition(user_word):
-
-    # This function loops through all possible definitions of the word and prints them    
-
-    # Personal terminal cleanliness preference
-    print("")
-
-    for definition in data[user_word]:
-
-        print(definition)
-
 def no_match(user_word):
 
-    # This function runs when the input isn't in the definition file
+    # This function runs when the word isn't in the database
     print(f"\nI'm sorry but {user_word} does not exist in our dictionary.")
 
 def check_user_word(user_word):
 
-    # This function attempts to find the definition in the data file and print it.
+    # This function attempts to find the definition in the database and print it.
     # If the word does not exist it attempts to find a close match.  If a close match
-    # found it asks the user whether they meant the match.
+    # found it asks the user whether they meant to enter the match.
 
-    try:
-        print_definition(user_word)
+    query = cursor.execute("SELECT Definition FROM Dictionary WHERE Expression = '%s'" % user_word)
+    results = cursor.fetchall()
 
-    except KeyError:
+    if results:
 
-        # Checks to see if a close match exists, in case of fat fingers
-        possibleWord = get_close_matches(user_word, data, 1)
+        # Personal terminal cleanliness preference
+        print("")
 
-        if possibleWord:
+        # Prints whatever number of definitions exist for the word
+        for definition in results:
 
-            # If close match exists, did the user mean that word?
-            grabMatch = input(f"Did you possibly mean to type {possibleWord[0]}?  Y/N: ")
+            print(definition[0])
 
-            if grabMatch.lower() == "y":
+    else:
 
-                # If the user meant to type that word we start again with that word instead
-                check_user_word(possibleWord[0])
+        # Tries to find a near match
+        check_close_matches(user_word)
 
-            else:
+def check_close_matches(user_word):
 
-                no_match(user_word)
+    # This function searches the database for any word close to the input from the user
+    # If found the user will be asked if that word is what they really meant
+    query = cursor.execute("SELECT Expression FROM Dictionary WHERE SOUNDEX(Expression) = SOUNDEX('%s') LIMIT 1" % user_word)
+    possible_word = cursor.fetchall()
+
+    if possible_word:
+
+        # If close match exists, did the user mean that word?
+        grabMatch = input(f"\nDid you possibly mean to type {possible_word[0][0]}?  Y/N: ")
+
+        if grabMatch.lower() == "y":
+
+            # If the user meant to type that word we start again with that word instead
+            check_user_word(possible_word[0][0])
 
         else:
+
+            no_match(user_word)
+
+    else:
 
             no_match(user_word)
 
